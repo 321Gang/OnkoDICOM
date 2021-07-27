@@ -15,6 +15,7 @@ from src.View.mainpage.DicomViewCoronal import DicomViewCoronal
 from src.View.mainpage.DicomViewSagittal import DicomViewSagittal
 from src.View.mainpage.IsodoseTab import IsodoseTab
 from src.View.mainpage.MenuBar import MenuBar
+from src.View.mainpage.DicomView3D import DicomView3D
 from src.View.mainpage.Toolbar import Toolbar
 from src.View.mainpage.PatientBar import PatientBar
 from src.View.mainpage.StructureTab import StructureTab
@@ -59,8 +60,11 @@ class UIMainWindow:
         self.main_window_instance.setStyleSheet(stylesheet)
 
         self.setup_central_widget()
+        self.setup_actions()
 
-        # Create actions and set menu and tool bars
+    def setup_actions(self):
+        if hasattr(self, 'toolbar'):
+            self.main_window_instance.removeToolBar(self.toolbar)
         self.action_handler = ActionHandler(self)
         self.menubar = MenuBar(self.action_handler)
         self.main_window_instance.setMenuBar(self.menubar)
@@ -87,11 +91,15 @@ class UIMainWindow:
             self.structures_tab = StructureTab()
             self.structures_tab.request_update_structures.connect(self.update_views)
             self.left_panel.addTab(self.structures_tab, "Structures")
+        elif hasattr(self, 'structures_tab'):
+            del self.structures_tab
 
         if patient_dict_container.has_modality("rtdose"):
             self.isodoses_tab = IsodoseTab()
             self.isodoses_tab.request_update_isodoses.connect(self.update_views)
             self.left_panel.addTab(self.isodoses_tab, "Isodoses")
+        elif hasattr(self, 'isodoses_tab'):
+            del self.isodoses_tab
 
         # Hide left panel if no rtss or rtdose
         if not patient_dict_container.has_modality("rtss") and not patient_dict_container.has_modality("rtdose"):
@@ -110,6 +118,7 @@ class UIMainWindow:
                                                iso_color=iso_color_dict, format_metadata=False)
         self.dicom_view_sagittal = DicomViewSagittal(roi_color=roi_color_dict, iso_color=iso_color_dict)
         self.dicom_view_coronal = DicomViewCoronal(roi_color=roi_color_dict, iso_color=iso_color_dict)
+        self.three_dimension_view = DicomView3D()
 
         # Rescale the size of the scenes inside the 3-slice views
         self.dicom_view_axial.zoom = 0.5
@@ -127,6 +136,7 @@ class UIMainWindow:
         self.dicom_4_views_layout.addWidget(self.dicom_view_axial, 0, 0)
         self.dicom_4_views_layout.addWidget(self.dicom_view_sagittal, 0, 1)
         self.dicom_4_views_layout.addWidget(self.dicom_view_coronal, 1, 0)
+        self.dicom_4_views_layout.addWidget(self.three_dimension_view, 1, 1)
         self.dicom_4_views_widget.setLayout(self.dicom_4_views_layout)
 
         self.dicom_view.addWidget(self.dicom_4_views_widget)
@@ -140,6 +150,8 @@ class UIMainWindow:
         if patient_dict_container.has_modality("rtss") and patient_dict_container.has_modality("rtdose"):
             self.dvh_tab = DVHTab()
             self.right_panel.addTab(self.dvh_tab, "DVH")
+        elif hasattr(self, 'dvh_tab'):
+            del self.dvh_tab
 
         self.dicom_tree = DicomTreeView()
         self.right_panel.addTab(self.dicom_tree, "DICOM Tree")
