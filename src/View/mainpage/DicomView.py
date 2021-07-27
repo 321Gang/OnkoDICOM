@@ -1,5 +1,4 @@
 from PySide6 import QtWidgets, QtCore, QtGui
-from skimage import measure
 
 from src.Model.Isodose import get_dose_grid
 from src.Model.PatientDictContainer import PatientDictContainer
