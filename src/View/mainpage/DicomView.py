@@ -1,6 +1,10 @@
 from PySide6 import QtWidgets, QtCore, QtGui
 
+from src.Model.Isodose import get_dose_grid
 from src.Model.PatientDictContainer import PatientDictContainer
+from src.Model.ROI import get_contour_pixel
+
+from src.Controller.PathHandler import resource_path
 
 
 class DicomView(QtWidgets.QWidget):
