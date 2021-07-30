@@ -14,7 +14,7 @@ class DicomViewCoronal(DicomView):
     def roi_display(self):
         slider_id = self.slider.value()
 
-        aspect = self.patient_dict_container.get("aspect")["coronal"]
+        aspect = self.patient_dict_container.get("pixmap_aspect")["coronal"]
         selected_rois = self.patient_dict_container.get("selected_rois")
         rois = self.patient_dict_container.get("rois")
         selected_rois_name = []

@@ -13,7 +13,7 @@ class DicomViewSagittal(DicomView):
 
     def roi_display(self):
         slider_id = self.slider.value()
-        aspect = self.patient_dict_container.get("aspect")["sagittal"]
+        aspect = self.patient_dict_container.get("pixmap_aspect")["sagittal"]
         selected_rois = self.patient_dict_container.get("selected_rois")
         rois = self.patient_dict_container.get("rois")
         selected_rois_name = []

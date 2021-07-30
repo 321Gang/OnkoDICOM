@@ -573,14 +573,14 @@ def get_roi_contour_pixel(dict_raw_ContourData, roi_list, dict_pixluts):
     return dict_pixels
 
 
-def calc_roi_polygon(curr_roi, curr_slice, dict_rois_contours, aspect=1):
+def calc_roi_polygon(curr_roi, curr_slice, dict_rois_contours, pixmap_aspect=1):
     """
     Calculate a list of polygons to display for a given ROI and a given slice.
     :param curr_roi:
      the ROI structure
     :param curr_slice:
      the current slice
-    :param aspect:
+    :param pixmap_aspect:
      the scaling ratio
     :return: List of polygons of type QPolygonF.
     """
@@ -609,7 +609,7 @@ def calc_roi_polygon(curr_roi, curr_slice, dict_rois_contours, aspect=1):
         list_qpoints = []
         contour = pixel_list[i]
         for point in contour:
-            curr_qpoint = QtCore.QPoint(point[0], point[1] * aspect)
+            curr_qpoint = QtCore.QPoint(point[0], point[1] * pixmap_aspect)
             list_qpoints.append(curr_qpoint)
         curr_polygon = QtGui.QPolygonF(list_qpoints)
         list_polygons.append(curr_polygon)
