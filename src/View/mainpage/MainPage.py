@@ -101,13 +101,13 @@ class UIMainWindow:
         self.right_panel = QtWidgets.QTabWidget()
 
         # Create a Dicom View containing single-slice and 3-slice views
-        self.dicom_view = QStackedWidget()
+        self.dicom_view = StackedWidget(self.format_data)
 
         roi_color_dict = self.structures_tab.color_dict if hasattr(self, 'structures_tab') else None
         iso_color_dict = self.isodoses_tab.color_dict if hasattr(self, 'isodoses_tab') else None
         self.dicom_single_view = DicomViewAxial(roi_color=roi_color_dict, iso_color=iso_color_dict)
         self.dicom_view_axial = DicomViewAxial(roi_color=roi_color_dict,
-                                               iso_color=iso_color_dict, format_metadata=False)
+                                               iso_color=iso_color_dict, metadata_formatted=True)
         self.dicom_view_sagittal = DicomViewSagittal(roi_color=roi_color_dict, iso_color=iso_color_dict)
         self.dicom_view_coronal = DicomViewCoronal(roi_color=roi_color_dict, iso_color=iso_color_dict)
 
@@ -215,3 +215,19 @@ class UIMainWindow:
             self.dicom_view_sagittal.zoom_out()
         else:
             self.dicom_single_view.zoom_out()
+
+    def format_data(self, size):
+        self.dicom_view_axial.format_metadata(size)
+
+
+class StackedWidget(QStackedWidget):
+    """
+    A stacked widget to toggle between the dicom single view and the dicom four view
+    """
+
+    def __init__(self, format_metadata):
+        super(StackedWidget, self).__init__()
+        self.format_metadata = format_metadata
+
+    def resizeEvent(self, event: QtGui.QResizeEvent) -> None:
+        self.format_metadata(event.size())
