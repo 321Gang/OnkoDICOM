@@ -42,8 +42,7 @@ if __name__ == "__main__":
         controller = Controller(default_directory=sys.argv[1])
         controller.show_open_patient()
     else:
-        # Get the default DICOM directory from SQLite database
-        # stored in a hidden directory in the user home directory
+        # Connect to the SQLite database stored in the hidden directory
         configuration = Configuration()
         default_dir = configuration.get_default_directory()
         if default_dir is None:
