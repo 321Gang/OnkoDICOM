@@ -573,6 +573,31 @@ def get_roi_contour_pixel(dict_raw_ContourData, roi_list, dict_pixluts):
     return dict_pixels
 
 
+def transform_rois_contours(axial_rois_contours):
+    coronal_rois_contours = {}
+    sagittal_rois_contours = {}
+    slice_ids = dict((v, k) for k, v in PatientDictContainer().get("dict_uid").items())
+    for name in axial_rois_contours.keys():
+        coronal_rois_contours[name] = {}
+        sagittal_rois_contours[name] = {}
+        for slice_id in slice_ids:
+            contours = axial_rois_contours[name][slice_id]
+            for contour in contours:
+                for i in range(len(contour)):
+                    if contour[i][1] in coronal_rois_contours[name]:
+                        coronal_rois_contours[name][contour[i][1]][0].append([contour[i][0], slice_ids[slice_id]])
+                    else:
+                        coronal_rois_contours[name][contour[i][1]] = [[]]
+                        coronal_rois_contours[name][contour[i][1]][0].append([contour[i][0], slice_ids[slice_id]])
+
+                    if contour[i][0] in sagittal_rois_contours[name]:
+                        sagittal_rois_contours[name][contour[i][0]][0].append([contour[i][1], slice_ids[slice_id]])
+                    else:
+                        sagittal_rois_contours[name][contour[i][0]] = [[]]
+                        sagittal_rois_contours[name][contour[i][0]][0].append([contour[i][1], slice_ids[slice_id]])
+    return coronal_rois_contours, sagittal_rois_contours
+
+
 def calc_roi_polygon(curr_roi, curr_slice, dict_rois_contours, pixmap_aspect=1):
     """
     Calculate a list of polygons to display for a given ROI and a given slice.
