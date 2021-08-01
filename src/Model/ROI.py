@@ -497,6 +497,7 @@ def calculate_pixels_sagittal(pixlut, contour, prone=False, feetfirst=False):
     #     pixels.append([x, y])
     return pixels
 
+
 def pixel_to_rcs(pixlut, x, y):
     """
     :param pixlut: Transformation matrix
@@ -574,6 +575,12 @@ def get_roi_contour_pixel(dict_raw_ContourData, roi_list, dict_pixluts):
 
 
 def transform_rois_contours(axial_rois_contours):
+    """
+    Transform the axial ROI contours into coronal and sagittal contours
+
+    :param axial_rois_contours: the dictionary of axial ROI contours
+    :return: Tuple of coronal and sagittal ROI contours
+    """
     coronal_rois_contours = {}
     sagittal_rois_contours = {}
     slice_ids = dict((v, k) for k, v in PatientDictContainer().get("dict_uid").items())
@@ -601,12 +608,11 @@ def transform_rois_contours(axial_rois_contours):
 def calc_roi_polygon(curr_roi, curr_slice, dict_rois_contours, pixmap_aspect=1):
     """
     Calculate a list of polygons to display for a given ROI and a given slice.
-    :param curr_roi:
-     the ROI structure
-    :param curr_slice:
-     the current slice
-    :param pixmap_aspect:
-     the scaling ratio
+
+    :param curr_roi: the ROI structure
+    :param curr_slice: the current slice
+    :param dict_rois_contours: the dictionary of ROI contours
+    :param pixmap_aspect: the scaling ratio
     :return: List of polygons of type QPolygonF.
     """
     # TODO Implement support for showing "holes" in contours.
@@ -778,7 +784,6 @@ def create_initial_rtss_from_ct(img_ds:pydicom.dataset.Dataset, ct_uid_list=[])-
     rt_ss.RTROIObservationsSequence = []
     rt_ss.SOPClassUID = "1.2.840.10008.5.1.4.1.1.481.3"
     rt_ss.SOPInstanceUID = pydicom.uid.generate_uid()
-
     
     rt_ss.InstanceCreationDate = rt_ss.StructureSetDate = dicom_date
     
