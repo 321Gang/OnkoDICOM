@@ -53,17 +53,19 @@ class Controller:
         if self.first_time_welcome_window.isVisible():
             self.first_time_welcome_window.close()
 
-        # only initialize open_patient_window once
+        # Only initialize open_patient_window once.
+        # If the instance has been initialized before, run
+        # check_selected_items() to display appropriate warnings and check for
+        # existing RTSTRUCTs
         if not isinstance(self.main_window, MainWindow):
             self.open_patient_window = OpenPatientWindow(
                 self.default_directory)
             self.open_patient_window.go_next_window.connect(
                 self.show_main_window)
+        else:
+            self.open_patient_window.check_selected_items()
 
         self.open_patient_window.show()
-
-        # Run check_selected_items() upon open patient window is shown
-        self.open_patient_window.check_selected_items()
 
     def show_main_window(self, progress_window):
         """
