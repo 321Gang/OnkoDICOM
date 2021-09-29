@@ -672,7 +672,10 @@ def get_roi_contour_pixel(dict_raw_contour_data, roi_list, dict_pixluts):
         dict_pixels_of_roi = collections.defaultdict(list)
         raw_contour = dict_raw_contour_data[roi]
         for roi_slice in raw_contour:
-            pixlut = dict_pixluts[roi_slice]
+            try:
+                pixlut = dict_pixluts[roi_slice]
+            except KeyError:
+                continue
             number_of_contours = len(raw_contour[roi_slice])
             for i in range(number_of_contours):
                 contour_pixels = calculate_pixels(pixlut,

@@ -330,6 +330,9 @@ def get_thickness_dict(dataset_rtss, read_data_dict):
             else:
                 continue
 
+        except TypeError:
+            continue
+
         # Finally, calculate thickness.
         thickness = math.sqrt(displacement[0] * displacement[0]
                               + displacement[1] * displacement[1]
